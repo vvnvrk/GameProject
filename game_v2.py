@@ -20,7 +20,7 @@ def fast_predict(number: int = 1) -> int:
         int: Число попыток
     """
     count = 0
-    bounds = [1, 100, 0]
+    bounds = [1, 100]
     while True:
         count += 1
         predict_number = half_division_number(bounds)  # предполагаемое число
@@ -31,7 +31,6 @@ def fast_predict(number: int = 1) -> int:
             bounds[1] = predict_number
         else:
             bounds[0] = predict_number
-        bounds[2] = equals       
     return count
 
 
