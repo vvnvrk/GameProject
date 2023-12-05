@@ -5,13 +5,8 @@
 import numpy as np
 
 
-def half_division_number(bounds):
-    return round((bounds[0]+bounds[1]) / 2, 0)
-    
-
-
 def fast_predict(number: int = 1) -> int:
-    """Рандомно угадываем число
+    """Угадываем число методом половинного деления расширенного интервала
 
     Args:
         number (int, optional): Загаданное число. Defaults to 1.
@@ -19,18 +14,26 @@ def fast_predict(number: int = 1) -> int:
     Returns:
         int: Число попыток
     """
+    # Инициируем начальные условия выполнения поиска (коливчество попыток и интервал поиска)
     count = 0
-    bounds = [1, 100]
+    bounds = [0, 101]
+    # Запускаем бесконечный цикл поиска загаданного числа 
     while True:
-        count += 1
-        predict_number = half_division_number(bounds)  # предполагаемое число
-        equals = number - predict_number
+        
+        # Вычисляем предполагаемое число и сравниваем с загаданным
+        count += 1                                   # увеличиваем на 1 число попыток
+        predict_number = (bounds[0]+bounds[1]) // 2  # предполагаемое число
+        equals = number - predict_number             # результат сравнения
+        
+        # Угадали число, выходим из цикла
         if equals == 0:
             break  # выход из цикла если угадали
-        if equals < 0:
-            bounds[1] = predict_number
-        else:
-            bounds[0] = predict_number
+        
+        # Не угадали число и изменяем границы интервала поиска
+        if equals < 0:                                # если результат сравнения отрицательный
+            bounds[1] = predict_number                # то правую границу переносим в предполагаемое число
+        else:                                         # иначе
+            bounds[0] = predict_number                # левую границу переносим в предполагаемое число
     return count
 
 
@@ -43,13 +46,15 @@ def score_game(fast_predict) -> int:
     Returns:
         int: среднее количество попыток
     """
-    count_ls = []
-    #np.random.seed(1)  # фиксируем сид для воспроизводимости
+    count_ls = []                                          # инициируем пустой список попытк угадывания
+    np.random.seed(1)                                      # фиксируем сид для воспроизводимости
     random_array = np.random.randint(1, 101, size=(1000))  # загадали список чисел
 
+    # Угадываем каждое число и формируем массив попыток
     for number in random_array:
         count_ls.append(fast_predict(number))
-
+    
+    # Вычисляем среднее количество попыток, выводим на экран и возвращаем результат
     score = int(np.mean(count_ls))
     print(f"Ваш алгоритм угадывает число в среднем за:{score} попыток")
     return score
