@@ -6,8 +6,7 @@ import numpy as np
 
 
 def half_division_number(bounds):
-    if bounds[2] == 0:
-        return round((bounds[0]+bounds[1]) / 2, 0)
+    return round((bounds[0]+bounds[1]) / 2, 0)
     
 
 
