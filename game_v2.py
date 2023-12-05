@@ -5,7 +5,13 @@
 import numpy as np
 
 
-def random_predict(number: int = 1) -> int:
+def half_division_number(bounds):
+    if bounds[2] == 0:
+        return round((bounds[0]+bounds[1]) / 2, 0)
+    
+
+
+def fast_predict(number: int = 1) -> int:
     """Рандомно угадываем число
 
     Args:
@@ -15,16 +21,22 @@ def random_predict(number: int = 1) -> int:
         int: Число попыток
     """
     count = 0
-
+    bounds = [1, 100, 0]
     while True:
         count += 1
-        predict_number = np.random.randint(1, 101)  # предполагаемое число
-        if number == predict_number:
+        predict_number = half_division_number(bounds)  # предполагаемое число
+        equals = number - predict_number
+        if equals == 0:
             break  # выход из цикла если угадали
+        if equals < 0:
+            bounds[1] = predict_number
+        else:
+            bounds[0] = predict_number
+        bounds[2] = equals       
     return count
 
 
-def score_game(random_predict) -> int:
+def score_game(fast_predict) -> int:
     """За какое количство попыток в среднем за 1000 подходов угадывает наш алгоритм
 
     Args:
@@ -38,7 +50,7 @@ def score_game(random_predict) -> int:
     random_array = np.random.randint(1, 101, size=(1000))  # загадали список чисел
 
     for number in random_array:
-        count_ls.append(random_predict(number))
+        count_ls.append(fast_predict(number))
 
     score = int(np.mean(count_ls))
     print(f"Ваш алгоритм угадывает число в среднем за:{score} попыток")
@@ -47,4 +59,4 @@ def score_game(random_predict) -> int:
 
 if __name__ == "__main__":
     # RUN
-    score_game(random_predict)
+    score_game(fast_predict)
